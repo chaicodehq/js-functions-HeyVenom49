@@ -54,21 +54,64 @@
  *   // red and blue objects are UNCHANGED
  */
 export function mixColors(color1, color2) {
-  // Your code here
+  if (
+    !color1 ||
+    !color2 ||
+    typeof color1.name !== "string" ||
+    typeof color2.name !== "string"
+  )
+    return null;
+
+  const r = Math.round((color1.r + color2.r) / 2);
+  const g = Math.round((color1.g + color2.g) / 2);
+  const b = Math.round((color1.b + color2.b) / 2);
+
+  return {
+    name: `${color1.name}-${color2.name}`,
+    r,
+    g,
+    b,
+  };
 }
 
 export function adjustBrightness(color, factor) {
-  // Your code here
+  if (!color || typeof factor !== "number") return null;
+
+  const clamp = (v) => Math.min(255, Math.max(0, Math.round(v)));
+
+  return {
+    ...color,
+    r: clamp(color.r * factor),
+    g: clamp(color.g * factor),
+    b: clamp(color.b * factor),
+  };
 }
 
 export function addToPalette(palette, color) {
-  // Your code here
+  if (!Array.isArray(palette)) return color ? [color] : [];
+  if (!color || typeof color.name !== "string") return [...palette];
+
+  return [...palette, color];
 }
 
 export function removeFromPalette(palette, colorName) {
-  // Your code here
+  if (!Array.isArray(palette)) return [];
+  return palette.filter((c) => c.name !== colorName);
 }
 
 export function mergePalettes(palette1, palette2) {
-  // Your code here
+  const p1 = Array.isArray(palette1) ? palette1 : [];
+  const p2 = Array.isArray(palette2) ? palette2 : [];
+
+  const seen = new Set();
+  const merged = [];
+
+  for (const color of [...p1, ...p2]) {
+    if (color && typeof color.name === "string" && !seen.has(color.name)) {
+      seen.add(color.name);
+      merged.push(color);
+    }
+  }
+
+  return merged;
 }
